@@ -30,6 +30,24 @@ const questionArray = [
         name: "id",
         message: "What is your employee id?",
     },
+    {
+        type: "input",
+        name: "email",
+        message: "What is your E-mail address?",      
+    },
+    {
+        type: "input",
+        name: "github",
+        message: "What is your GitHub?",  
+        when: function (value){
+            if (value.role === "Engineer") {
+                return true;
+            } else {
+                return false;
+            }
+        },    
+    },
+    
 ];
 
 
