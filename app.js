@@ -15,8 +15,8 @@ const render = require("./lib/htmlRenderer");
 // and to create objects for each team member (using the correct classes as blueprints!)
 
 
-promptCommon();
-function prompCommon(userInput){
+questionPrompt();
+function questionPrompt(userInput){
     inquirer.prompt([
         {
             name: 'employeeName',
@@ -40,12 +40,74 @@ function prompCommon(userInput){
             choices: ["Manager", "Engineer", "Intern"]
         },
     ]).then(function(res){
-        specialPromp(res);
+        question2Prompt(res);
     }).catch(function(err){
         if(err) throw err;
     })
 }
-
+function question2Prompt(userResponse){
+    if(userResponse.employeeRole === "Manager"){
+        inquirer.prompt([
+            {
+                name: 'officeNumber',
+                type: 'input',
+                message: 'What is the Office Number?'
+            }
+        ]).then(function(question2Prompt){
+            const manager = new Manager(userResponse.employeeName, userResponse.employeeId, userResponse.employeeEmail, userResponse.officeNumber)
+            employeeArray.push(engineer);
+            stopPrompt();
+        }).catch(function(err){
+            if(err) throw err
+        })
+    }else if(userResponse.employeeRole === "Engineer"){
+        inquirer.prompt([
+            {
+                name: 'github',
+                type: 'input',
+                message: 'What is the Enployee GitHub?'
+            }
+        ]).then(function(question2Prompt){
+            const engineer = new Engineer(userResponse.employeeName, userResponse.employeeId, userResponse.employeeEmail, userResponse.github)
+            employeeArray.push(engineer);
+            stopPrompt();
+        }).catch(function(err){
+            if(err) throw err
+        })
+    }else {
+        inquirer.prompt([
+            {
+                name: 'school',
+                type: 'input',
+                message: 'Where did the Employee attend schooling?'
+            }
+        ]).then(function(question2Prompt){
+            const inter = new Intern(userResponse.employeeName, userResponse.employeeId, userResponse.employeeEmail, userResponse.school)
+            employeeArray.push(inter);
+            stopPrompt();
+        }).catch(function(err){
+            if(err) throw err
+        })
+    }
+}
+function stopPrompt(){
+    inquirer.prompt([
+        {
+            name: 'stop',
+            type: 'confirm',
+            message: 'Any more Employees?'
+        }
+    ]).then(function(res){
+        if(res.stop){
+            const EmloyeeHTML = render(employeeArray);
+            fs.writeFile(outputPath, EmloyeeHTML, function(err){
+                if(err) throw err;
+            })
+        }else{
+            questionPrompt();
+        }
+    })
+}
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
